@@ -63,4 +63,4 @@ async function getRandomMenu() {
     })
     .finally(() => {
       console.log('Random Menu candidates change everyday');
-    });
+    });    
