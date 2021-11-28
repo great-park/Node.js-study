@@ -9,16 +9,23 @@ const path = require('path');
 * 특정 req에서만 실행하고 싶으면 첫번째 매개변수에 주소 추가
 * 연속으로 미들웨어 실행 가능 next()
 * 단, 응답(send, sendFile, json 등)은 한 번만
+* next에 매개변수가 없으면 다음 라우터 실행역할, error를 담으면 바로 에러처리 미들웨어로 넘아감
 */
 app.use((req, res, next)=> {
     console.log('모든 요청에 실행');
     next();
+}, (req, res, next)=>{
+    try{
+        console.log('no error');
+    }catch(error){
+        next(error);  //에러처리 미들웨어로 넘겨주기!
+    }
 })
 
 //port 라는 속성을 서버에 심는다.
 app.set('port', process.env.PORT || 3000);
 
-//express에서 send가 http에서의 writehead, end를 동시에 해줌
+//express에서 send가 http에서의 writehead, end를 동시에 해줌 - 웬만하면 express에서 이런식 편리하게 제공
 //라우터들 , 작성시 위에서 아래로 차례대로 실행됨을 고려할 것
 app.get('/about', (req,res)=>{
     res.send('hello express');
