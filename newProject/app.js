@@ -1,5 +1,7 @@
 //nodemon 서버로 실행할 것
 const express = require('express');
+//경로 처리
+const path = require('path');
 
 
 const app = express();
@@ -8,9 +10,16 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 //
 
-app.get('/', (req,res)=>{
+app.get('/about', (req,res)=>{
     res.send('hello express');
 })
+
+//html 파일을 서빙
+app.get('/', (req,res)=>{
+    res.sendFile(path.join(__dirname, './index.html'));
+})
+
+
 app.listen(app.get('port'), ()=>{
     console.log('express server starts, 3000');
 });
