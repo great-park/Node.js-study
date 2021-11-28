@@ -5,11 +5,11 @@ const app = express();
 const path = require('path');
 
 /* 미들웨어 - 모든 요청에서 실행할 코드 작성 app.use(미들웨어)  use 이외에도 get, post도 모두 미들웨어 장착
-* 미들웨어는 next 매개변수를 실행해줘야 req.params와 일치하는 라우터를 실행
-* 특정 req에서만 실행하고 싶으면 첫번째 매개변수에 주소 추가
-* 연속으로 미들웨어 실행 가능 next()
-* 단, 응답(send, sendFile, json 등)은 한 번만
-* next에 매개변수가 없으면 다음 라우터 실행역할, error를 담으면 바로 에러처리 미들웨어로 넘아감
+*  미들웨어는 next 매개변수를 실행해줘야 req.params와 일치하는 라우터를 실행
+*  특정 req에서만 실행하고 싶으면 첫번째 매개변수에 주소 추가
+*  연속으로 미들웨어 실행 가능 next()
+*  단, 응답(send, sendFile, json 등)은 한 번만
+*  next에 매개변수가 없으면 다음 라우터 실행역할, error를 담으면 바로 에러처리 미들웨어로 넘아감
 */
 app.use((req, res, next)=> {
     console.log('모든 요청에 실행');
