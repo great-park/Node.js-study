@@ -10,17 +10,28 @@ app.set('port', process.env.PORT || 3000);
 //dev - >클라이언트의 요청이 서버에 기록  , combined -> 좀 더 상세한 정보 (ip, 브라우저)
 const morgan = require('morgan');
 app.use(morgan('dev'));
+//정적파일 제공, 요청경로: /                      실제경로: /public
+app.use('/', express.static(path.join(__dirname, 'public')));
 
 //cookie parsor 미들웨어
 //쿠기가 있으면 알아서 파싱됨, 쿠키 조작
 //cookieParsor메소드 안에 암호키 넣으면 암호화 가능
 const cookieParsor = require('cookie-parser');
-app.use(cookieParsor());
+app.use(cookieParsor('password'));
 
 //데어티 파싱 $$거의 필수$$  - req.body.name 이런식으로 데이터가 알아서 파싱됨
 app.use(express.json()); // json 데이터를 파싱해서 req.body로 넣어줌
 app.use(express.urlencoded({ extended: true})); //form 파싱 , true면 qs false면 querystring
 
+const session = require("express-session"); //요청에 대한 객체 생성, 요청마다 개인 저장공간 생성
+app.use(session({
+    resave : false,
+    saveUninitialized : false,
+    secret : 'password',
+    cookie:{
+        httpOnly : true,
+    }
+}))
 /* 미들웨어 - 모든 요청에서 실행할 코드 작성 app.use(미들웨어)  use 이외에도 get, post도 모두 미들웨어 장착
 * 미들웨어는 next 매개변수를 실행해줘야 req.params와 일치하는 라우터를 실행
 * 특정 req에서만 실행하고 싶으면 첫번째 매개변수에 주소 추가
@@ -46,7 +57,8 @@ app.get('/about', (req,res)=>{
     res.send('hello express');
 })
 
-app.get('/', (req,res)=>{
+app.get('/', (req,res, next)=>{
+    req.session.id = "hello";
     req.cookies // singedCookies = 암호화된 쿠키 사용
     //html 파일을 서빙
     res.sendFile(path.join(__dirname, './index.html'));  
